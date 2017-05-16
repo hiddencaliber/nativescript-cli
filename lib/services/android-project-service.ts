@@ -36,7 +36,8 @@ export class AndroidProjectService extends projectServiceBaseLib.PlatformProject
 		private $pluginVariablesService: IPluginVariablesService,
 		private $devicePlatformsConstants: Mobile.IDevicePlatformsConstants,
 		private $config: IConfiguration,
-		private $npm: INodePackageManager) {
+		private $npm: INodePackageManager,
+		private $proxyService: IProxyService) {
 		super($fs, $projectDataService);
 		this._androidProjectPropertiesManagers = Object.create(null);
 	}
@@ -510,6 +511,22 @@ export class AndroidProjectService extends projectServiceBaseLib.PlatformProject
 		childProcessOpts = childProcessOpts || {};
 		childProcessOpts.cwd = childProcessOpts.cwd || projectRoot;
 		childProcessOpts.stdio = childProcessOpts.stdio || "inherit";
+
+		const proxyCache = this.$proxyService.getCache();
+
+		if (proxyCache) {
+			const proxyProtocol = proxyCache.PROXY_PROTOCOL.replace(/:/g, "");
+
+			gradleArgs.push(`-D${proxyProtocol}.proxyHost=${proxyCache.PROXY_HOSTNAME}`);
+			gradleArgs.push(`-D${proxyProtocol}.proxyPort=${proxyCache.PROXY_PORT}`);
+
+			const proxyCredentials = await this.$proxyService.getCredentials();
+
+			if (proxyCredentials && proxyCredentials.username) {
+				gradleArgs.push(`-D${proxyProtocol}.proxyUser=${proxyCredentials.username}`);
+				gradleArgs.push(`-D${proxyProtocol}.proxyPassword=${proxyCredentials.password}`);
+			}
+		}
 
 		return await this.spawn(gradlew,
 			gradleArgs,
