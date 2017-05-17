@@ -718,3 +718,29 @@ export class EmulatorPlatformService implements IEmulatorPlatformService {
 		return Promise.resolve();
 	}
 }
+
+export class ProxyService implements IProxyService {
+	setCache(cacheData: IProxyCache): IProxyCache {
+		return null;
+	};
+
+	getCache(): IProxyCache {
+		return null;
+	};
+
+	clearCache(): void {
+		return null;
+	};
+
+	setCredentials(credentials: ICredentials): Promise<ICredentials> {
+		return null;
+	};
+
+	getCredentials(): Promise<ICredentials> {
+		return null;
+	};
+
+	getInfo(): Promise<string> {
+		return Promise.resolve("");
+	}
+}

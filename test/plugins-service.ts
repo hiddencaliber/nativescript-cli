@@ -98,6 +98,7 @@ function createTestInjector() {
 	});
 	testInjector.register("xmlValidator", XmlValidator);
 	testInjector.register("config", StaticConfigLib.Configuration);
+	testInjector.register("proxyService", stubs.ProxyService);
 
 	return testInjector;
 }

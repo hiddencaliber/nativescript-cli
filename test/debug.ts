@@ -56,6 +56,7 @@ function createTestInjector(): IInjector {
 			iOS: "iOS"
 		}
 	});
+	testInjector.register("proxyService", stubs.ProxyService);
 
 	return testInjector;
 }
